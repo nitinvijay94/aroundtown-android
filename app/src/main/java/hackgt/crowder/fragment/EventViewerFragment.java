@@ -32,6 +32,9 @@ public class EventViewerFragment extends Fragment {
     private EventAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Event> events = new ArrayList<>();
+    private boolean sortByPop = false;
+    private Button sortPop;
+    private Button sortDistance;
 
 
     public static EventViewerFragment newInstance() {
@@ -66,33 +69,40 @@ public class EventViewerFragment extends Fragment {
         mAdapter = new EventAdapter(events, getActivity());
         mRecyclerView.setAdapter(mAdapter);
 
-        Button sortDistance = (Button) view.findViewById(R.id.distance);
+        sortDistance = (Button) view.findViewById(R.id.distance);
         sortDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sortByPop = false;
+                toggle();
                 LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
                 String provider = locationManager.getBestProvider(criteria, true);
                 final Location current;
-                current = locationManager.getLastKnownLocation(provider);
-                Collections.sort(events, new Comparator<Event>() {
-                    @Override
-                    public int compare(Event event0, Event event1) {
-                        if (current != null) {
-                            double distance0 = event0.getLocation().distanceTo(current);
-                            double distance1 = event1.getLocation().distanceTo(current);
-                            return Double.compare(distance0, distance1);
+                if(provider!=null) {
+                    current = locationManager.getLastKnownLocation(provider);
+
+                    Collections.sort(events, new Comparator<Event>() {
+                        @Override
+                        public int compare(Event event0, Event event1) {
+                            if (current != null) {
+                                double distance0 = event0.getLocation().distanceTo(current);
+                                double distance1 = event1.getLocation().distanceTo(current);
+                                return Double.compare(distance0, distance1);
+                            }
+                            return 0;
                         }
-                        return 0;
-                    }
-                });
-                mAdapter.notifyDataSetChanged();
+                    });
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         });
-        Button sortPop = (Button) view.findViewById(R.id.popular);
+        sortPop = (Button) view.findViewById(R.id.popular);
         sortPop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sortByPop = true;
+                toggle();
                 Collections.sort(events, new Comparator<Event>() {
                     @Override
                     public int compare(Event event0, Event event1) {
@@ -123,6 +133,18 @@ public class EventViewerFragment extends Fragment {
 
     public void filter(CharSequence s) {
         mAdapter.getFilter().filter(s);
+    }
+
+    public void toggle() {
+//        Button sortPop = (Button) view.findViewById(R.id.popular);
+//        Button sortDistance = (Button) view.findViewById(R.id.distance);
+        if (sortByPop) {
+            sortPop.setBackgroundColor(0xFF982929);
+            sortDistance.setBackgroundColor(0xFFD76C56);
+        } else {
+            sortPop.setBackgroundColor(0xFFD76C56);
+            sortDistance.setBackgroundColor(0xFF982929);
+        }
     }
 
 }

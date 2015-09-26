@@ -21,12 +21,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/white"
             android:text="@string/popularity"
-            android:textColor="@android:color/black" />
+            style="@style/EventListButton"
+            />
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@android:color/darker_gray" />
 
@@ -35,9 +35,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/white"
             android:text="@string/distance"
-            android:textColor="@android:color/black" />
+            style="@style/EventListButton"
+            />
     </LinearLayout>
 
 </LinearLayout>
