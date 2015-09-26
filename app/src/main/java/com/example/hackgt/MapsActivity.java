@@ -1,22 +1,35 @@
 package com.example.hackgt;
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+
+    private ArrayList<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        events.add(new Event(33.776578, -84.395960, "Party"));
+        events.add(new Event(33.776570,-84.395970,"Frat"));
+        events.add(new Event(33.776580,-84.395968,"Yolo"));
     }
 
     @Override
@@ -59,7 +72,33 @@ public class MapsActivity extends FragmentActivity {
      * <p/>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
-    private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    private void setUpMap(){
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.setMyLocationEnabled(true);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, true);
+        Location location;
+        try {
+            location = locationManager.getLastKnownLocation(provider);
+        } catch (SecurityException e) {
+            location = new Location("origin");
+            location.setLongitude(0);
+            location.setLatitude(0);
+        }
+        LatLng currentPosition = new LatLng(location.getLatitude(),location.getLongitude());
+//        mMap.addMarker(new MarkerOptions()
+//                .position(currentPosition)
+//                .snippet("Lat:" + location.getLatitude() + "Lng:"+ location.getLongitude())
+//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+//                .title("ME"));
+        CameraUpdate center = CameraUpdateFactory.newLatLng(currentPosition);
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);
+        for (Event event : events) {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
+                    .getLatitude(),event.getLocation().getLongitude())).title(event.getTitle()));
+        }
     }
 }
