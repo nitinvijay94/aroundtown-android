@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         events.add(new Event(33.776580, -84.395968, "Yolo", 20));
         mapFragment = MainMapFragment.newInstance();
         eventViewerFragment = EventViewerFragment.newInstance();
+        eventViewerFragment.setEvents(events, this);
         mapFragment.setEvents(events);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -51,9 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (eventViewerFragment != null) {
+        if (eventViewerFragment != null && !isListShowing) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            eventViewerFragment.setEvents(events, this);
             fragmentTransaction.replace(R.id.container, eventViewerFragment);
             fragmentTransaction.commit();
             isListShowing = true;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 invalidateOptionsMenu();
             } else {
                 transaction.replace(R.id.container, eventViewerFragment);
+                eventViewerFragment.setEvents(events, this);
                 item.setIcon(android.R.drawable.ic_menu_mapmode);
                 isListShowing = true;
                 invalidateOptionsMenu();

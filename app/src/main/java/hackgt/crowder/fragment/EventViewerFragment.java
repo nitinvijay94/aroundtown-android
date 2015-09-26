@@ -28,7 +28,7 @@ import hackgt.crowder.model.Event;
 public class EventViewerFragment extends Fragment {
     private EventViewerInterface eventViewerInterface;
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView eventList;
     private EventAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Event> events = new ArrayList<>();
@@ -48,27 +48,25 @@ public class EventViewerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (events.size() == 0) {
-            events.add(new Event(33.776578, -84.395960, "Party", 100));
-            events.add(new Event(33.776570, -84.395970, "Frat", 50));
-            events.add(new Event(33.776580, -84.395968, "Yolo", 10));
-        }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_viewer, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.comment_list);
-        mRecyclerView.setHasFixedSize(true);
-
+        eventList = (RecyclerView) view.findViewById(R.id.comment_list);
+        eventList.setHasFixedSize(true);
+        if (events == null) {
+            events = new ArrayList<>();
+        }
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new EventAdapter(events, getActivity());
-        mRecyclerView.setAdapter(mAdapter);
-
+        eventList.setLayoutManager(mLayoutManager);
+        if (mAdapter == null) {
+            mAdapter = new EventAdapter(events, getActivity());
+        } else {
+            mAdapter.setEvents(events);
+        }
+        eventList.setAdapter(mAdapter);
         sortDistance = (Button) view.findViewById(R.id.distance);
         sortDistance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,10 +77,10 @@ public class EventViewerFragment extends Fragment {
                 Criteria criteria = new Criteria();
                 String provider = locationManager.getBestProvider(criteria, true);
                 final Location current;
-                if(provider!=null) {
+                if (provider != null) {
                     current = locationManager.getLastKnownLocation(provider);
 
-                    Collections.sort(events, new Comparator<Event>() {
+                    Collections.sort(mAdapter.getEvents(), new Comparator<Event>() {
                         @Override
                         public int compare(Event event0, Event event1) {
                             if (current != null) {
@@ -103,7 +101,7 @@ public class EventViewerFragment extends Fragment {
             public void onClick(View v) {
                 sortByPop = true;
                 toggle();
-                Collections.sort(events, new Comparator<Event>() {
+                Collections.sort(mAdapter.getEvents(), new Comparator<Event>() {
                     @Override
                     public int compare(Event event0, Event event1) {
                         return event1.getScore() - event0.getScore();
@@ -147,4 +145,15 @@ public class EventViewerFragment extends Fragment {
         }
     }
 
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events, Context context) {
+        this.events = events;
+        mAdapter = new EventAdapter(this.events, context);
+        if (eventList != null) {
+            eventList.setAdapter(mAdapter);
+        }
+    }
 }

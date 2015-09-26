@@ -2,6 +2,7 @@ package hackgt.crowder.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.hackgt.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import hackgt.crowder.activity.EventInfoActivity;
 import hackgt.crowder.model.Event;
 
 public class MainMapFragment extends Fragment {
@@ -86,16 +89,19 @@ public class MainMapFragment extends Fragment {
                 if (events != null) {
                     for (Event event : events) {
                         Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
-                                .getLatitude(), event.getLocation().getLongitude())).title(event.getTitle()));
+                                .getLatitude(), event.getLocation().getLongitude())));
                         eventMap.put(marker, event);
                     }
                 }
                 googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-
+                        Intent intent = new Intent(getActivity(), EventInfoActivity.class);
+                        getActivity().startActivity(intent);
                     }
                 });
+
+                map.setInfoWindowAdapter(new EventMapAdapter());
             }
         });
         return view;
@@ -128,9 +134,26 @@ public class MainMapFragment extends Fragment {
             eventMap.clear();
             for (Event event : events) {
                 Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
-                        .getLatitude(), event.getLocation().getLongitude())).title(event.getTitle()));
+                        .getLatitude(), event.getLocation().getLongitude())));
                 eventMap.put(marker, event);
             }
+        }
+    }
+
+    private class EventMapAdapter implements GoogleMap.InfoWindowAdapter {
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.event_window_layout, null, false);
+            Event temp = eventMap.get(marker);
+            ((TextView) view.findViewById(R.id.event_title)).setText(temp.getTitle());
+            ((TextView) view.findViewById(R.id.location)).setText("950 Marietta Street, Atlanta");
+            return view;
         }
     }
 }
