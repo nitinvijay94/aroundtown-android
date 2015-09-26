@@ -19,9 +19,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import hackgt.crowder.model.Event;
 
@@ -31,6 +33,7 @@ public class MainMapFragment extends Fragment {
     private MainMapInterAction mListener;
     private GoogleMap map;
     private ArrayList<Event> events;
+    private HashMap<Marker, Event> eventMap;
 
     public static MainMapFragment newInstance() {
         MainMapFragment fragment = new MainMapFragment();
@@ -43,6 +46,9 @@ public class MainMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (eventMap == null) {
+            eventMap = new HashMap<>();
+        }
     }
 
     @Override
@@ -79,10 +85,17 @@ public class MainMapFragment extends Fragment {
                 googleMap.animateCamera(zoom);
                 if (events != null) {
                     for (Event event : events) {
-                        googleMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
+                        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
                                 .getLatitude(), event.getLocation().getLongitude())).title(event.getTitle()));
+                        eventMap.put(marker, event);
                     }
                 }
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+
+                    }
+                });
             }
         });
         return view;
@@ -112,9 +125,11 @@ public class MainMapFragment extends Fragment {
         this.events = events;
         if (map != null) {
             map.clear();
+            eventMap.clear();
             for (Event event : events) {
-                map.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
+                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
                         .getLatitude(), event.getLocation().getLongitude())).title(event.getTitle()));
+                eventMap.put(marker, event);
             }
         }
     }
