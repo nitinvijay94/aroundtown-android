@@ -39,26 +39,24 @@ public class EventViewerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        events.add(new Event(33.776578, -84.395960, "Party", 100));
-        events.add(new Event(33.776570, -84.395970, "Frat", 50));
-        events.add(new Event(33.776580, -84.395968, "Yolo", 10));
+        if (events.size() == 0) {
+            events.add(new Event(33.776578, -84.395960, "Party", 100));
+            events.add(new Event(33.776570, -84.395970, "Frat", 50));
+            events.add(new Event(33.776580, -84.395968, "Yolo", 10));
+        }
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event_viewer, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example
         mAdapter = new EventAdapter(events, getActivity());
         mRecyclerView.setAdapter(mAdapter);
 
