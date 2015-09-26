@@ -16,8 +16,8 @@ import hackgt.crowder.model.Event;
 import java.util.List;
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private List<Event> mDataset;
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+    private List<Event> events;
     private Context context;
 
     // Provide a reference to the views for each data item
@@ -25,27 +25,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView mTextView;
-        public TextView mScoreView;
+        public TextView titleView;
+        public TextView scoreView;
         public View view;
 
         public ViewHolder(View v) {
             super(v);
             view = v;
-            mTextView = (TextView)itemView.findViewById(R.id.titleEvent);
-            mScoreView = (TextView)itemView.findViewById(R.id.score);
+            titleView = (TextView) itemView.findViewById(R.id.titleEvent);
+            scoreView = (TextView) itemView.findViewById(R.id.score);
         }
     }
 
     // Provide a suitable costructor (depends on the kind of dataset)
-    public MyAdapter(List<Event> myDataset, Context context) {
-        mDataset = myDataset;
+    public EventAdapter(List<Event> myDataset, Context context) {
+        events = myDataset;
         this.context = context;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public EventAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
@@ -60,8 +60,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position).getTitle());
-        holder.mScoreView.setText(mDataset.get(position).getScore()+"");
+        holder.titleView.setText(events.get(position).getTitle());
+        holder.scoreView.setText(events.get(position).getScore() + "");
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +74,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return events.size();
     }
 }

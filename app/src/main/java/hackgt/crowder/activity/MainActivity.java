@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity {
             mapFragment = MainMapFragment.newInstance();
         }
 
-        evfragment = EventViewerFragment.newInstance("","");
+        evfragment = EventViewerFragment.newInstance();
         mapFragment.setEvents(events);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
