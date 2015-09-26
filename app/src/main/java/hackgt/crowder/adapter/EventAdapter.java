@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 
 import com.example.hackgt.R;
 
-import hackgt.crowder.activity.MainActivity;
+import hackgt.crowder.activity.EventInfoActivity;
 import hackgt.crowder.model.Event;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     @Override
     public EventAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                       int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_list_item, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -61,7 +61,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MainActivity.class);
+                Intent intent = new Intent(context, EventInfoActivity.class);
                 context.startActivity(intent);
             }
         });
