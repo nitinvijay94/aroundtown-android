@@ -18,11 +18,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+import hackgt.crowder.fragment.EventViewerFragment;
 import hackgt.crowder.fragment.MainMapFragment;
 import hackgt.crowder.model.Event;
 
 public class MainActivity extends FragmentActivity {
 
+    private EventViewerFragment evfragment;
     private MainMapFragment mapFragment;
 
     private ArrayList<Event> events;
@@ -32,16 +34,18 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         events = new ArrayList<>();
-        events.add(new Event(33.776578, -84.395960, "Party"));
-        events.add(new Event(33.776570, -84.395970, "Frat"));
-        events.add(new Event(33.776580, -84.395968, "Yolo"));
+        events.add(new Event(33.776578, -84.395960, "Party", 100));
+        events.add(new Event(33.776570, -84.395970, "Frat", 50));
+        events.add(new Event(33.776580, -84.395968, "Yolo", 20));
         if (mapFragment == null) {
             mapFragment = MainMapFragment.newInstance();
         }
+
+        evfragment = EventViewerFragment.newInstance("","");
         mapFragment.setEvents(events);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, mapFragment);
+        fragmentTransaction.replace(R.id.container, evfragment);
         fragmentTransaction.commit();
 
     }
