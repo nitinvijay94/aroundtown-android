@@ -1,4 +1,4 @@
-package com.example.hackgt;
+package hackgt.crowder.model;
 
 import android.location.Location;
 
@@ -11,7 +11,7 @@ public class Event {
 
     private String title;
 
-    Event(double latitude, double longitude, String title) {
+    public Event(double latitude, double longitude, String title) {
         this.title = title;
         location = new Location(title);
         location.setLatitude(latitude);
