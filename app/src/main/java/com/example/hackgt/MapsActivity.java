@@ -27,9 +27,6 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        events.add(new Event(33.776578, -84.395960, "Party"));
-        events.add(new Event(33.776570,-84.395970,"Frat"));
-        events.add(new Event(33.776580,-84.395968,"Yolo"));
     }
 
     @Override
@@ -96,6 +93,10 @@ public class MapsActivity extends FragmentActivity {
         CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
         mMap.moveCamera(center);
         mMap.animateCamera(zoom);
+        events = new ArrayList<>();
+        events.add(new Event(33.7763, -84.3959, "Party"));
+        events.add(new Event(33.7764, -84.3958, "Frat"));
+        events.add(new Event(33.7765, -84.3957, "Yolo"));
         for (Event event : events) {
             mMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
                     .getLatitude(),event.getLocation().getLongitude())).title(event.getTitle()));
