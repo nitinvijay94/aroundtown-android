@@ -2,9 +2,6 @@ package hackgt.crowder.model;
 
 import android.location.Location;
 
-/**
- * Created by arjun on 9/25/15.
- */
 public class Event {
 
     private Location location;
