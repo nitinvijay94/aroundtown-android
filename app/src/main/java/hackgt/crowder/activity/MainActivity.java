@@ -50,6 +50,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (eventViewerFragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, eventViewerFragment);
+            fragmentTransaction.commit();
+            isListShowing = true;
+            invalidateOptionsMenu();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }
@@ -58,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.search);
+        final MenuItem searchItem = menu.findItem(R.id.search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -72,7 +84,27 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    searchItem.collapseActionView();
+                }
+            }
+        });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem search = menu.findItem(R.id.search);
+        if (isListShowing) {
+            search.setVisible(true);
+        } else {
+            search.collapseActionView();
+            search.setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -84,10 +116,12 @@ public class MainActivity extends AppCompatActivity {
                 transaction.replace(R.id.container, mapFragment);
                 item.setIcon(android.R.drawable.ic_menu_preferences);
                 isListShowing = false;
+                invalidateOptionsMenu();
             } else {
                 transaction.replace(R.id.container, eventViewerFragment);
                 item.setIcon(android.R.drawable.ic_menu_mapmode);
                 isListShowing = true;
+                invalidateOptionsMenu();
             }
             transaction.commit();
         }

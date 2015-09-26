@@ -5,8 +5,8 @@
     <string name="toggle">TOGGLE</string>
     <string name="popularity">POPULAR</string>
     <string name="distance">DISTANCE</string>
+    <string name="setting">setting</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
