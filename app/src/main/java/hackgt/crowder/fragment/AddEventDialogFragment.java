@@ -1,5 +1,6 @@
 package hackgt.crowder.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -27,14 +28,21 @@ import java.util.GregorianCalendar;
  */
 public class AddEventDialogFragment extends DialogFragment {
 
+    private AddEventInterface addEventInterface;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        addEventInterface = (AddEventInterface) activity;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_add_event, null);
-        final DateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, yyyy");
-        final DateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final DateFormat timeFormat = new SimpleDateFormat("hh:mm");
 
         final EditText startDate = ((EditText) view.findViewById(R.id.startDate));
         final EditText startTime = ((EditText) view.findViewById(R.id.startTime));
@@ -115,10 +123,25 @@ public class AddEventDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String nameOfEvent = ((EditText) view.findViewById(R.id.title_event)).getText().toString();
-                        String description = ((EditText) view.findViewById(R.id.description)).getText().toString();
-                        String address = ((EditText) view.findViewById(R.id.location)).getText().toString();
-                        Toast.makeText(getActivity(), "Event Added Successfully", Toast.LENGTH_SHORT).show();
+                        String nameOfEvent = ((EditText) view.findViewById(R.id.title_event)).getText().toString().trim();
+                        String description = ((EditText) view.findViewById(R.id.description)).getText().toString().trim();
+                        String address = ((EditText) view.findViewById(R.id.location)).getText().toString().trim();
+                        String startDate = ((EditText) view.findViewById(R.id.startDate)).getText().toString().trim() + " " + ((EditText) view.findViewById(R.id.startTime)).getText().toString().trim();
+                        String endDate = ((EditText) view.findViewById(R.id.endDate)).getText().toString().trim() + " " + ((EditText) view.findViewById(R.id.endTime)).getText().toString().trim();
+                        String tag0 = ((EditText) view.findViewById(R.id.tag_0)).getText().toString().trim();
+                        String tag1 = ((EditText) view.findViewById(R.id.tag_1)).getText().toString().trim();
+                        String tag2 = ((EditText) view.findViewById(R.id.tag_2)).getText().toString().trim();
+
+                        if (nameOfEvent.length() == 0) {
+                            Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                        } else if (description.length() == 0) {
+                            Toast.makeText(getActivity(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+                        } else if (address.length() == 0) {
+                            Toast.makeText(getActivity(), "Address cannot be empty", Toast.LENGTH_SHORT).show();
+                        } else {
+                            addEventInterface.addEvent(nameOfEvent, description, address, startDate, endDate, tag0, tag1, tag2);
+                        }
+
                         dismiss();
                     }
                 }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -133,7 +156,7 @@ public class AddEventDialogFragment extends DialogFragment {
     }
 
     public interface AddEventInterface {
-        public void addEvent();
+        public void addEvent(String name, String description, String address, String start, String end, String tag0, String tag1, String tag2);
     }
 
 }

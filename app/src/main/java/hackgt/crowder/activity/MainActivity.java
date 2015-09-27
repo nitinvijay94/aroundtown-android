@@ -3,6 +3,7 @@ package hackgt.crowder.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -12,13 +13,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hackgt.R;
@@ -27,15 +33,22 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import hackgt.crowder.Constants;
 import hackgt.crowder.fragment.AddEventDialogFragment;
@@ -44,12 +57,13 @@ import hackgt.crowder.fragment.EventViewerFragment.EventViewerInterface;
 import hackgt.crowder.fragment.MainMapFragment;
 import hackgt.crowder.model.Event;
 
-public class MainActivity extends AppCompatActivity implements MainMapFragment.MapAddEventInterface, EventViewerInterface {
+public class MainActivity extends AppCompatActivity implements MainMapFragment.MapAddEventInterface, EventViewerInterface, AddEventDialogFragment.AddEventInterface {
 
     private boolean isListShowing;
     private EventViewerFragment eventViewerFragment;
     private MainMapFragment mapFragment;
     private ProgressDialog progressDialog;
+    private ProgressDialog addEventProgressDialog;
     boolean doubleBackToExitPressedOnce = false;
 
 
@@ -61,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
     }
 
     private void initialize() {
+        progressDialog = new ProgressDialog(this);
+        addEventProgressDialog = new ProgressDialog(this);
+        addEventProgressDialog.setMessage("Adding Event....");
         ArrayList<Event> events = new ArrayList<>();
         mapFragment = MainMapFragment.newInstance();
         eventViewerFragment = EventViewerFragment.newInstance();
@@ -191,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
 
     @Override
     public void refresh() {
-        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getResources().getString(R.string.load_events));
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -214,6 +230,13 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
         return new SimpleDateFormat("h:mm a EEE, MMM d, yyyy").format(date);
     }
 
+    @Override
+    public void addEvent(String name, String description, String address, String start, String end, String tag0, String tag1, String tag2) {
+        addEventProgressDialog.show();
+        new AddEventTask().execute(name, description, address, start, end, tag0, tag1, tag2);
+    }
+
+
     private class GetEventsTask extends AsyncTask<Void, Void, ArrayList<Event>> {
 
         @Override
@@ -234,8 +257,12 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
                     temp.setEndDate(end.toString());
                     temp.setScore(jsonEvent.getInt(Constants.SCORE));
                     temp.setAddress(jsonEvent.getString(Constants.ADDRESS));
-                    temp.setLatitude(jsonEvent.getDouble(Constants.LATITUDE));
-                    temp.setLongitude(jsonEvent.getDouble(Constants.LONGITUDE));
+                    try {
+                        temp.setLatitude(jsonEvent.getDouble(Constants.LATITUDE));
+                        temp.setLongitude(jsonEvent.getDouble(Constants.LONGITUDE));
+                    } catch (Exception e) {
+
+                    }
                     ArrayList<String> tempTags = new ArrayList<>();
                     JSONArray tagsJson = jsonEvent.getJSONArray(Constants.TAG);
                     for (int j = 0; j < tagsJson.length(); j++) {
@@ -297,4 +324,80 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
             }
         }
     }
+
+    private class AddEventTask extends AsyncTask<String, Void, Boolean> {
+        String tag0;
+        String tag1;
+        String tag2;
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                String urlString = Constants.ADD_EVENT_URL;
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                HashMap<String, String> postDataParams = new HashMap<>();
+                postDataParams.put("title", params[0]);
+                postDataParams.put("description", params[1]);
+                postDataParams.put("location", params[2]);
+                postDataParams.put("start", params[3]);
+                postDataParams.put("end", params[4]);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(getPostDataString(postDataParams));
+
+                writer.flush();
+                writer.close();
+                os.close();
+
+                conn.connect();
+                int response = conn.getResponseCode();
+                if (response == 200) {
+                    String responseJSON = conn.getResponseMessage();
+                    return true;
+                } else {
+                    Log.e("Add event error", response + "");
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            addEventProgressDialog.dismiss();
+            if (success) {
+                refresh();
+            } else {
+                Toast.makeText(MainActivity.this, "Fail to add event", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+            StringBuilder result = new StringBuilder();
+            boolean first = true;
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (first)
+                    first = false;
+                else
+                    result.append("&");
+
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            }
+
+            return result.toString();
+        }
+    }
+
+
 }
