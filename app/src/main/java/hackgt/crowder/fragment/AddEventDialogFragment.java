@@ -25,11 +25,9 @@ public class AddEventDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String nameOfEvent = ((EditText) view.findViewById(R.id.nameOfEventEdit)).getText().toString();
-                        String description = ((EditText) view.findViewById(R.id.descriptionEdit)).getText().toString();
-                        String address = ((EditText) view.findViewById(R.id.locationEdit)).getText().toString();
-                        String startTime = ((EditText) view.findViewById(R.id.startTimeEdit)).getText().toString();
-                        String endTime = ((EditText) view.findViewById(R.id.endTimeEdit)).getText().toString();
+                        String nameOfEvent = ((EditText) view.findViewById(R.id.title_event)).getText().toString();
+                        String description = ((EditText) view.findViewById(R.id.description)).getText().toString();
+                        String address = ((EditText) view.findViewById(R.id.location)).getText().toString();
                         Toast.makeText(getActivity(), "Event Added Successfully", Toast.LENGTH_SHORT).show();
                         dismiss();
                     }

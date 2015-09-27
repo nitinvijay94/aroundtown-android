@@ -169,12 +169,15 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
 
     @Override
     public void addEventFromMap() {
-        AddEventDialogFragment dialog = new AddEventDialogFragment();
-        dialog.show(getSupportFragmentManager(), getString(R.string.add));
+        popAddDialog();
     }
 
     @Override
     public void showAddEventDialog() {
+        popAddDialog();
+    }
+
+    private void popAddDialog() {
         AddEventDialogFragment dialog = new AddEventDialogFragment();
         dialog.show(getSupportFragmentManager(), getString(R.string.add));
     }

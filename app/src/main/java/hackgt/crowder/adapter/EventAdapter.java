@@ -128,6 +128,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     for (Event event : eventsCopy) {
                         if (event.getTitle().toLowerCase().contains(constraint.toString().toLowerCase().trim())) {
                             resultEvents.add(event);
+                            break;
                         }
                         if (event.getTags().contains(constraint.toString().toLowerCase().trim())) {
                             resultEvents.add(event);
