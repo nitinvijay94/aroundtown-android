@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
     private EventViewerFragment eventViewerFragment;
     private MainMapFragment mapFragment;
     private ProgressDialog progressDialog;
+    boolean doubleBackToExitPressedOnce = false;
 
 
     @Override
@@ -80,6 +82,19 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
             fragmentTransaction.commit();
             isListShowing = true;
             invalidateOptionsMenu();
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+            Toast.makeText(this, getResources().getString(R.string.quit), Toast.LENGTH_SHORT).show();
+            this.doubleBackToExitPressedOnce = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
     }
 
