@@ -3,6 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#D76C56</item>
+        <item name="colorControlNormal">#982929</item>
+        <item name="colorControlActivated">#D76C56</item>
+        <item name="colorControlHighlight">#D76C56</item>
     </style>
 
     <style name="EventListButton" parent="@android:style/TextAppearance.Medium">

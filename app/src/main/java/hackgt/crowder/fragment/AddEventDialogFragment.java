@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by hediwang on 15/9/26.
@@ -30,14 +31,26 @@ public class AddEventDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_add_event, null);
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        final DateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, yyyy");
+        final DateFormat timeFormat = new SimpleDateFormat("h:mm a");
 
         final EditText startDate = ((EditText) view.findViewById(R.id.startDate));
-
         final EditText startTime = ((EditText) view.findViewById(R.id.startTime));
         final EditText endDate = ((EditText) view.findViewById(R.id.endDate));
         final EditText endTime = ((EditText) view.findViewById(R.id.endTime));
+
+        Calendar current = new GregorianCalendar();
+        final int year = current.get(Calendar.YEAR);
+        final int month = current.get(Calendar.MONTH);
+        final int day = current.get(Calendar.DAY_OF_MONTH);
+        final int hour = current.get(Calendar.HOUR);
+
+        Date later = new Date();
+        startDate.setText(dateFormat.format(new Date()));
+        startTime.setText(timeFormat.format(new Date(year, month, day, (hour + 1), 0)));
+        endDate.setText(dateFormat.format(new Date()));
+        endTime.setText(timeFormat.format(new Date(year, month, day, (hour + 2), 0)));
+
         startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +60,7 @@ public class AddEventDialogFragment extends DialogFragment {
                         Date date = new Date(year - 1900, monthOfYear, dayOfMonth);
                         startDate.setText(dateFormat.format(date));
                     }
-                }, 2015, 10, 01);
+                }, year, month, day);
                 dialog.show();
             }
         });
@@ -60,7 +73,7 @@ public class AddEventDialogFragment extends DialogFragment {
                         Date date = new Date(year - 1900, monthOfYear, dayOfMonth);
                         endDate.setText(dateFormat.format(date));
                     }
-                }, 2015, 10, 03);
+                }, year, month, day);
                 dialog.show();
             }
         });
@@ -76,7 +89,7 @@ public class AddEventDialogFragment extends DialogFragment {
                         date.setSeconds(0);
                         startTime.setText(timeFormat.format(date));
                     }
-                }, 00, 00, true);
+                }, hour + 1, 0, true);
                 dialog.show();
             }
         });
@@ -92,7 +105,7 @@ public class AddEventDialogFragment extends DialogFragment {
                         date.setSeconds(0);
                         endTime.setText(timeFormat.format(date));
                     }
-                }, 00, 00, true);
+                }, hour + 2, 0, true);
                 dialog.show();
             }
         });

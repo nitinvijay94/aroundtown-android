@@ -14,6 +14,7 @@ import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -113,8 +114,8 @@ public class EventInfoActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.title)).setText(event.getTitle());
                 ((TextView) findViewById(R.id.score)).setText(event.getScore() + "");
                 ((TextView) findViewById(R.id.location)).setText(event.getAddress());
-                ((TextView) findViewById(R.id.start)).setText(event.getStartDate());
-                ((TextView) findViewById(R.id.end)).setText(event.getEndDate());
+                ((TextView) findViewById(R.id.start)).setText(MainActivity.getFormattedDate(event.getStartDate()));
+                ((TextView) findViewById(R.id.end)).setText(MainActivity.getFormattedDate(event.getEndDate()));
                 ((TextView) findViewById(R.id.description)).setText(event.getDescription());
                 LinearLayout commentsView = ((LinearLayout) findViewById(R.id.comments));
                 //TODO
