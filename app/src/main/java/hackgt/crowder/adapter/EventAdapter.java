@@ -29,6 +29,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         public TextView titleView;
         public TextView scoreView;
+        public TextView address;
+        public TextView startTime;
+        public TextView tag0;
+        public TextView tag1;
+        public TextView tag2;
+        public View tags;
         public View view;
 
         public ViewHolder(View v) {
@@ -36,6 +42,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             view = v;
             titleView = (TextView) itemView.findViewById(R.id.titleEvent);
             scoreView = (TextView) itemView.findViewById(R.id.score);
+            address = (TextView) itemView.findViewById(R.id.location);
+            startTime = (TextView) itemView.findViewById(R.id.start);
+            tag0 = (TextView) itemView.findViewById(R.id.tag_0);
+            tag1 = (TextView) itemView.findViewById(R.id.tag_1);
+            tag2 = (TextView) itemView.findViewById(R.id.tag_2);
+            tags = itemView.findViewById(R.id.tags);
         }
     }
 
@@ -56,8 +68,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.titleView.setText(events.get(position).getTitle());
-        holder.scoreView.setText(events.get(position).getScore() + "");
+        Event temp = events.get(position);
+        holder.titleView.setText(temp.getTitle());
+        holder.scoreView.setText(temp.getScore() + "");
+        holder.address.setText(temp.getAddress());
+        holder.startTime.setText(temp.getStartDate());
+        try {
+            holder.tag0.setText('#' + temp.getTags().get(0));
+            try {
+                holder.tag1.setText('#' + temp.getTags().get(1));
+                holder.tag2.setText('#' + temp.getTags().get(2));
+            } catch (Exception e) {
+
+            }
+        } catch (Exception e) {
+            holder.tags.setVisibility(View.GONE);
+        }
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

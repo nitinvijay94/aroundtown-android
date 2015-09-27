@@ -29,10 +29,9 @@
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLength="25"
+        android:maxEms="10"
         android:paddingBottom="2dp"
         android:paddingTop="2dp"
-        android:singleLine="false"
         android:textSize="17dp" />
 
     <TextView
