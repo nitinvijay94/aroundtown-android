@@ -2,6 +2,7 @@ package hackgt.crowder.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -80,7 +81,7 @@ public class EventViewerFragment extends Fragment {
             }
         });
         FloatingActionButton button = ((FloatingActionButton) view.findViewById(R.id.add_event_button));
-        button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_light));
+        button.setBackgroundTintList(ColorStateList.valueOf(0xFFD76C56));
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
