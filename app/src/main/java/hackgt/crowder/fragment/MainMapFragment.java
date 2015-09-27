@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 
 import hackgt.crowder.Constants;
 import hackgt.crowder.activity.EventInfoActivity;
+import hackgt.crowder.activity.MainActivity;
 import hackgt.crowder.model.Event;
 
 public class MainMapFragment extends Fragment {
@@ -69,7 +71,7 @@ public class MainMapFragment extends Fragment {
         }
         view = inflater.inflate(R.layout.fragment_main_map, container, false);
         FloatingActionButton button = ((FloatingActionButton) view.findViewById(R.id.add_event_button));
-        button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_light));
+        button.setBackgroundTintList(ColorStateList.valueOf(0xFFD76C56));
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,13 +87,13 @@ public class MainMapFragment extends Fragment {
                 LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
                 String provider = locationManager.getBestProvider(criteria, true);
-                Location location;
+                Location location = new Location("origin");
+                location.setLongitude(0);
+                location.setLatitude(0);
                 try {
                     location = locationManager.getLastKnownLocation(provider);
                 } catch (SecurityException e) {
-                    location = new Location("origin");
-                    location.setLongitude(0);
-                    location.setLatitude(0);
+
                 }
                 if (location == null) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -186,7 +188,7 @@ public class MainMapFragment extends Fragment {
             ((TextView) view.findViewById(R.id.event_title)).setText(temp.getTitle());
             ((TextView) view.findViewById(R.id.location)).setText(temp.getAddress());
             ((TextView) view.findViewById(R.id.score)).setText(temp.getScore() + "");
-            ((TextView) view.findViewById(R.id.start)).setText(temp.getStartDate());
+            ((TextView) view.findViewById(R.id.start)).setText(MainActivity.getFormattedDate(temp.getStartDate()));
             return view;
         }
     }

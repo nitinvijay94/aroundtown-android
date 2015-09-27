@@ -2,8 +2,10 @@ package hackgt.crowder.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.res.Resources;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -15,9 +17,13 @@ import com.example.hackgt.R;
 
 import hackgt.crowder.Constants;
 import hackgt.crowder.activity.EventInfoActivity;
+import hackgt.crowder.activity.MainActivity;
 import hackgt.crowder.model.Event;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -29,6 +35,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public CardView cv;
         public TextView titleView;
         public TextView scoreView;
         public TextView address;
@@ -42,6 +49,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         public ViewHolder(View v) {
             super(v);
             view = v;
+            cv = (CardView) itemView.findViewById(R.id.cv);
             titleView = (TextView) itemView.findViewById(R.id.titleEvent);
             scoreView = (TextView) itemView.findViewById(R.id.score);
             address = (TextView) itemView.findViewById(R.id.location);
@@ -70,11 +78,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (position % 2 == 1) {
+            holder.cv.setCardBackgroundColor(0xFFEEEEEE);
+        } else {
+            holder.cv.setCardBackgroundColor(0xFFFAFAFA);
+        }
         final Event temp = events.get(position);
         holder.titleView.setText(temp.getTitle());
         holder.scoreView.setText(temp.getScore() + "");
         holder.address.setText(temp.getAddress());
-        holder.startTime.setText(temp.getStartDate());
+        holder.startTime.setText(MainActivity.getFormattedDate(temp.getStartDate()));
         try {
             holder.tag0.setText('#' + temp.getTags().get(0));
             try {

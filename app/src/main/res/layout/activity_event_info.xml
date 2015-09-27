@@ -20,12 +20,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:paddingRight="10dp"
+                android:layout_gravity="bottom" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="#F7F5ED">
 
                 <TextView
                     android:id="@+id/score"
@@ -33,18 +36,18 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingBottom="5dp"
-                    android:textColor="@android:color/holo_blue_bright"
-                    android:textSize="25dp" />
+                    android:textColor="#D76C56"
+                    android:textSize="25dp"/>
 
                 <Button
                     android:id="@+id/like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@android:color/holo_red_dark"
+                    android:background="#D76C56"
                     android:text="@string/like"
                     android:textColor="@android:color/white"
-                    android:textSize="10dp" />
+                    android:textSize="14dp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -55,7 +58,7 @@
             android:paddingTop="10dp"
             android:text="@string/location_colon"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/location"
@@ -63,7 +66,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:singleLine="false"
-            android:textSize="15dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -71,7 +74,7 @@
             android:paddingTop="10dp"
             android:text="@string/start_colon"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/start"
@@ -79,7 +82,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:singleLine="false"
-            android:textSize="15dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -87,7 +90,7 @@
             android:paddingTop="10dp"
             android:text="@string/end_colon"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/end"
@@ -95,7 +98,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:singleLine="false"
-            android:textSize="15dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -103,7 +106,7 @@
             android:paddingTop="10dp"
             android:text="@string/description_colon"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/description"
@@ -111,7 +114,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:singleLine="false"
-            android:textSize="13dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -119,7 +122,7 @@
             android:paddingTop="10dp"
             android:text="@string/comments_colon"
             android:textColor="@android:color/darker_gray"
-            android:textSize="10dp" />
+            android:textSize="14sp" />
 
 
         <LinearLayout

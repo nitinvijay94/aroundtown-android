@@ -179,6 +179,16 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
         }
     }
 
+    public static String getFormattedDate(String start) {
+        Date date = new Date();
+        try {
+            date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyy").parse(start);
+        } catch (Exception e) {
+            return date.toString();
+        }
+        return new SimpleDateFormat("h:mm a EEE, MMM d, yyyy").format(date);
+    }
+
     private class GetEventsTask extends AsyncTask<Void, Void, ArrayList<Event>> {
 
         @Override

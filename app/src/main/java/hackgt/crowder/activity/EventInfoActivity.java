@@ -116,6 +116,7 @@ public class EventInfoActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.end)).setText(event.getEndDate());
                 ((TextView) findViewById(R.id.description)).setText(event.getDescription());
                 LinearLayout commentsView = ((LinearLayout) findViewById(R.id.comments));
+                //TODO
                 if (event.getComments() != null) {
                     for (String comment : event.getComments()) {
                         TextView temp = new TextView(EventInfoActivity.this);
