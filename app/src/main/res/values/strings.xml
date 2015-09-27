@@ -19,6 +19,7 @@
     <string name="start_colon">START:</string>
     <string name="end_colon">END:</string>
     <string name="description_colon">DESCRIPTION:</string>
+    <string name="no_comment">Be the first to comment on this event.</string>
     <string name="comments_colon">COMMENTS</string>
     <string name="quit">Press back again to exit the app.</string>
 

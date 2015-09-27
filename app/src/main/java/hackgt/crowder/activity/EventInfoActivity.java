@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -117,17 +118,28 @@ public class EventInfoActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.description)).setText(event.getDescription());
                 LinearLayout commentsView = ((LinearLayout) findViewById(R.id.comments));
                 //TODO
-                if (event.getComments() != null) {
+                if (event.getComments().size() != 0) {
                     for (String comment : event.getComments()) {
+                        CardView card = new CardView(EventInfoActivity.this);
+                        card.setCardElevation(4);
+                        card.setRadius(10);
+                        card.setCardBackgroundColor(0xFFFFFFFF);
+                        card.setContentPadding(10, 10, 10, 10);
                         TextView temp = new TextView(EventInfoActivity.this);
                         temp.setText(comment);
                         temp.setTextSize(15);
-                        temp.setPadding(5, 10, 0, 0);
-                        commentsView.addView(temp);
+                        temp.setPadding(5, 7, 7, 7);
+                        card.addView(temp);
+                        commentsView.addView(card);
                     }
                 }
-
-
+                else {
+                    TextView temp = new TextView(EventInfoActivity.this);
+                    temp.setText(getResources().getString(R.string.no_comment));
+                    temp.setTextSize(15);
+                    temp.setPadding(5, 10, 0, 0);
+                    commentsView.addView(temp);
+                }
             } else {
                 Toast.makeText(EventInfoActivity.this, getResources().getString(R.string.connection_error), Toast.LENGTH_SHORT).show();
             }
