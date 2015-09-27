@@ -15,6 +15,16 @@ public class Event {
 
     private String endDate;
 
+    private double price;
+
+
+    public Event(double latitude, double longitude, String title, int score, String startDate, String endDate, double price){
+        this(latitude, longitude, title, score);
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.price = price;
+    }
+
     public Event(double latitude, double longitude, String title, int score) {
         this.title = title;
         this.score = score;

@@ -1,5 +1,6 @@
 package hackgt.crowder.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Event> events;
 
+    public boolean initialized;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +37,32 @@ public class MainActivity extends AppCompatActivity {
         initialize();
     }
 
+    public void createEvent(View view){
+        Intent intent = new Intent(this, AddEventActivity.class);
+        this.startActivityForResult(intent, 28);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == 1)
+        {
+
+        }
+    }
+
+    public void setEvents(ArrayList<Event> events) {
+        this.events = events;
+//        mapFragment.setEvents(events);
+        eventViewerFragment.setEvents(events, this);
+    }
+
     private void initialize() {
-        events = new ArrayList<>();
-        events.add(new Event(33.776578, -84.395960, "Party", 100));
-        events.add(new Event(33.776570, -84.395970, "Frat", 50));
-        events.add(new Event(33.776580, -84.395968, "Yolo", 20));
+        if(!initialized) {
+            events = new ArrayList<>();
+            events.add(new Event(33.776578, -84.395960, "Party", 100));
+            events.add(new Event(33.776570, -84.395970, "Frat", 50));
+            events.add(new Event(33.776580, -84.395968, "Yolo", 20));
+        }
         mapFragment = MainMapFragment.newInstance();
         eventViewerFragment = EventViewerFragment.newInstance();
         eventViewerFragment.setEvents(events, this);
@@ -48,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.container, eventViewerFragment);
         fragmentTransaction.commit();
         isListShowing = true;
+        initialized = true;
+
     }
 
     @Override
