@@ -19,23 +19,23 @@
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_weight="1"
-                android:textSize="30dp"
                 android:paddingRight="10dp"
-                android:layout_gravity="bottom" />
+                android:textSize="30dp" />
 
             <android.support.v7.widget.CardView xmlns:cv="http://schemas.android.com/apk/res-auto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                cv:cardUseCompatPadding="true"
                 cv:cardCornerRadius="0dp"
-                cv:cardElevation="2dp">
+                cv:cardElevation="2dp"
+                cv:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:background="#F7F5ED">
+                    android:background="#F7F5ED"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/score"
@@ -44,7 +44,7 @@
                         android:layout_gravity="center"
                         android:paddingBottom="5dp"
                         android:textColor="#D76C56"
-                        android:textSize="25dp"/>
+                        android:textSize="25dp" />
 
                     <Button
                         android:id="@+id/like"
@@ -54,7 +54,7 @@
                         android:background="@drawable/like_button"
                         android:text="@string/like"
                         android:textColor="@android:color/white"
-                        android:textSize="14dp"/>
+                        android:textSize="14dp" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -124,23 +124,36 @@
             android:singleLine="false"
             android:textSize="18sp" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="@string/comments_colon"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="10dp"
+                android:text="@string/comments_colon"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/add_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:text="+ ADD A COMMENT"
+                android:textColor="@android:color/holo_green_light" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/comments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="5dp">
-
-        </LinearLayout>
+            android:paddingTop="5dp"></LinearLayout>
 
     </LinearLayout>
 </ScrollView>

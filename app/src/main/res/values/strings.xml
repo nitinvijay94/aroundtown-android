@@ -22,6 +22,7 @@
     <string name="no_comment">Be the first to comment on this event.</string>
     <string name="comments_colon">COMMENTS</string>
     <string name="quit">Press back again to exit the app.</string>
+    <string name="add_comment">ADD COMMENT</string>
 
 
 </resources>

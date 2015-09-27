@@ -26,6 +26,8 @@ import java.util.GregorianCalendar;
  * Created by hediwang on 15/9/26.
  */
 public class AddEventDialogFragment extends DialogFragment {
+
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -128,6 +130,10 @@ public class AddEventDialogFragment extends DialogFragment {
         Dialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
+    }
+
+    public interface AddEventInterface {
+        public void addEvent();
     }
 
 }

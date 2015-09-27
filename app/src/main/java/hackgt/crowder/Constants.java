@@ -7,6 +7,7 @@ public class Constants {
     public static final String red = "";
     public static final String EVENTS_URL = "https://crowdevent.herokuapp.com/events/?format=json";
     public static final String EVENT_URL = "https://crowdevent.herokuapp.com/events/";
+    public static final String COMMENT_URL = "https://crowdevent.herokuapp.com/comment/upload/";
     public static final String JSON_FORMAT = "/?format=json";
     public static final String ID = "id";
     public static final String TITLE = "title";
