@@ -6,11 +6,13 @@
     <string name="popularity">POPULAR</string>
     <string name="distance">DISTANCE</string>
     <string name="setting">setting</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_add_event">Add an event</string>
+    <string name="add">ADD</string>
+    <string name="cancel">CANCEL</string>
+    <string name="no_connection">No Internet Access. Please Check Your Connection</string>
+    <string name="connection_error">An Connection Error Occurred. Please Try Again Later.</string>
+    <string name="load_events">Loading events.....This may take up to 20 seconds.</string>
+    <string name="dash">-</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 
 </resources>

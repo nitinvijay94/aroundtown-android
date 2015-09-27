@@ -44,10 +44,6 @@
         <activity
             android:name="hackgt.crowder.activity.EventInfoActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="hackgt.crowder.activity.AddEventActivity"
-            android:label="@string/title_activity_add_event" >
-        </activity>
     </application>
 
 </manifest>

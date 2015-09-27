@@ -1,6 +1,11 @@
 package hackgt.crowder.activity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,24 +16,38 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.hackgt.R;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import hackgt.crowder.Constants;
+import hackgt.crowder.fragment.AddEventDialogFragment;
 import hackgt.crowder.fragment.EventViewerFragment;
+import hackgt.crowder.fragment.EventViewerFragment.EventViewerInterface;
 import hackgt.crowder.fragment.MainMapFragment;
 import hackgt.crowder.model.Event;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainMapFragment.MapAddEventInterface, EventViewerInterface {
 
     private boolean isListShowing;
     private EventViewerFragment eventViewerFragment;
     private MainMapFragment mapFragment;
+    private ProgressDialog progressDialog;
 
-    private ArrayList<Event> events;
-
-    public boolean initialized;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,32 +56,8 @@ public class MainActivity extends AppCompatActivity {
         initialize();
     }
 
-    public void createEvent(View view){
-        Intent intent = new Intent(this, AddEventActivity.class);
-        this.startActivityForResult(intent, 28);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == 1)
-        {
-
-        }
-    }
-
-    public void setEvents(ArrayList<Event> events) {
-        this.events = events;
-//        mapFragment.setEvents(events);
-        eventViewerFragment.setEvents(events, this);
-    }
-
     private void initialize() {
-        if(!initialized) {
-            events = new ArrayList<>();
-            events.add(new Event(33.776578, -84.395960, "Party", 100));
-            events.add(new Event(33.776570, -84.395970, "Frat", 50));
-            events.add(new Event(33.776580, -84.395968, "Yolo", 20));
-        }
+        ArrayList<Event> events = new ArrayList<>();
         mapFragment = MainMapFragment.newInstance();
         eventViewerFragment = EventViewerFragment.newInstance();
         eventViewerFragment.setEvents(events, this);
@@ -72,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.container, eventViewerFragment);
         fragmentTransaction.commit();
         isListShowing = true;
-        initialized = true;
+        refresh();
 
     }
 
@@ -81,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         if (eventViewerFragment != null && !isListShowing) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            eventViewerFragment.setEvents(events, this);
             fragmentTransaction.replace(R.id.container, eventViewerFragment);
             fragmentTransaction.commit();
             isListShowing = true;
@@ -128,9 +122,11 @@ public class MainActivity extends AppCompatActivity {
         MenuItem search = menu.findItem(R.id.search);
         if (isListShowing) {
             search.setVisible(true);
+            menu.findItem(R.id.toggle).setIcon(android.R.drawable.ic_menu_mapmode);
         } else {
             search.collapseActionView();
             search.setVisible(false);
+            menu.findItem(R.id.toggle).setIcon(android.R.drawable.ic_menu_preferences);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -147,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 invalidateOptionsMenu();
             } else {
                 transaction.replace(R.id.container, eventViewerFragment);
-                eventViewerFragment.setEvents(events, this);
                 item.setIcon(android.R.drawable.ic_menu_mapmode);
                 isListShowing = true;
                 invalidateOptionsMenu();
@@ -155,5 +150,116 @@ public class MainActivity extends AppCompatActivity {
             transaction.commit();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void addEventFromMap() {
+        AddEventDialogFragment dialog = new AddEventDialogFragment();
+        dialog.show(getSupportFragmentManager(), getString(R.string.add));
+    }
+
+    @Override
+    public void showAddEventDialog() {
+        AddEventDialogFragment dialog = new AddEventDialogFragment();
+        dialog.show(getSupportFragmentManager(), getString(R.string.add));
+    }
+
+    @Override
+    public void refresh() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.load_events));
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            progressDialog.show();
+            new GetEventsTask().execute();
+        } else {
+            Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class GetEventsTask extends AsyncTask<Void, Void, ArrayList<Event>> {
+
+        @Override
+        protected ArrayList<Event> doInBackground(Void... params) {
+            try {
+                String jsonEvents = getEventJson();
+                ArrayList<Event> events = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray(jsonEvents);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonEvent = jsonArray.getJSONObject(i);
+                    Event temp = new Event();
+                    temp.setId(jsonEvent.getInt(Constants.ID));
+                    temp.setTitle(jsonEvent.getString(Constants.TITLE));
+                    DateFormat tempFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sss");
+                    Date start = tempFormat.parse(jsonEvent.getString(Constants.START));
+                    temp.setStartDate(start.toString());
+                    Date end = tempFormat.parse(jsonEvent.getString(Constants.END));
+                    temp.setEndDate(end.toString());
+                    temp.setScore(jsonEvent.getInt(Constants.SCORE));
+                    temp.setAddress(jsonEvent.getString(Constants.ADDRESS));
+                    temp.setLatitude(jsonEvent.getDouble(Constants.LATITUDE));
+                    temp.setLongitude(jsonEvent.getDouble(Constants.LONGITUDE));
+                    ArrayList<String> tempTags = new ArrayList<>();
+                    JSONArray tagsJson = jsonEvent.getJSONArray(Constants.TAG);
+                    for (int j = 0; j < tagsJson.length(); j++) {
+                        tempTags.add(tagsJson.getString(j).toLowerCase());
+                    }
+                    temp.setTags(tempTags);
+                    events.add(temp);
+                }
+                return events;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Event> events) {
+            if (events != null) {
+                if (mapFragment != null) {
+                    mapFragment.setEvents(events);
+                }
+                if (eventViewerFragment != null) {
+                    eventViewerFragment.setEvents(events, MainActivity.this);
+                }
+            } else {
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.connection_error), Toast.LENGTH_SHORT).show();
+            }
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
+
+        private String getEventJson() throws IOException {
+            InputStream is = null;
+            try {
+                URL url = new URL(Constants.EVENTS_URL);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                // Starts the query
+                conn.connect();
+                int response = conn.getResponseCode();
+                is = conn.getInputStream();
+                StringBuilder builder = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+                return builder.toString();
+            } catch (Exception e) {
+                return null;
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+        }
     }
 }

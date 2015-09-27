@@ -7,13 +7,16 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.hackgt.R;
 
@@ -67,6 +70,23 @@ public class EventViewerFragment extends Fragment {
             mAdapter.setEvents(events);
         }
         eventList.setAdapter(mAdapter);
+        final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
+        refreshLayout.setNestedScrollingEnabled(true);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                eventViewerInterface.refresh();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+        FloatingActionButton button = ((FloatingActionButton) view.findViewById(R.id.add_event_button));
+        button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_light));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eventViewerInterface.showAddEventDialog();
+            }
+        });
         sortDistance = (Button) view.findViewById(R.id.distance);
         sortDistance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,8 +104,14 @@ public class EventViewerFragment extends Fragment {
                         @Override
                         public int compare(Event event0, Event event1) {
                             if (current != null) {
-                                double distance0 = event0.getLocation().distanceTo(current);
-                                double distance1 = event1.getLocation().distanceTo(current);
+                                Location temp0 = new Location("");
+                                Location temp1 = new Location("");
+                                temp0.setLatitude(event0.getLatitude());
+                                temp0.setLongitude(event0.getLongitude());
+                                temp1.setLatitude(event1.getLatitude());
+                                temp1.setLongitude(event1.getLongitude());
+                                double distance0 = temp0.distanceTo(current);
+                                double distance1 = temp1.distanceTo(current);
                                 return Double.compare(distance0, distance1);
                             }
                             return 0;
@@ -116,7 +142,7 @@ public class EventViewerFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-//        eventViewerInterface = (EventViewerInterface) activity;
+        eventViewerInterface = (EventViewerInterface) activity;
     }
 
     @Override
@@ -126,7 +152,9 @@ public class EventViewerFragment extends Fragment {
     }
 
     public interface EventViewerInterface {
-        public void onFragmentInteraction(Uri uri);
+        public void showAddEventDialog();
+
+        public void refresh();
     }
 
     public void filter(CharSequence s) {

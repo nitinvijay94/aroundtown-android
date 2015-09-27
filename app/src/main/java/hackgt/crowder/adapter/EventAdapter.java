@@ -87,6 +87,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         if (event.getTitle().toLowerCase().contains(constraint.toString().toLowerCase().trim())) {
                             resultEvents.add(event);
                         }
+                        if (event.getTags().contains(constraint.toString().toLowerCase().trim())) {
+                            resultEvents.add(event);
+                        }
                     }
                     results.values = resultEvents;
                     results.count = resultEvents.size();

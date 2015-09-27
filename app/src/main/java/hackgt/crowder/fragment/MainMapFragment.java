@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.hackgt.R;
@@ -33,7 +34,7 @@ import hackgt.crowder.model.Event;
 public class MainMapFragment extends Fragment {
 
     private static View view;
-    private MainMapInterAction mListener;
+    private MapAddEventInterface addEventInterface;
     private GoogleMap map;
     private ArrayList<Event> events;
     private HashMap<Marker, Event> eventMap;
@@ -64,6 +65,14 @@ public class MainMapFragment extends Fragment {
             }
         }
         view = inflater.inflate(R.layout.fragment_main_map, container, false);
+        FloatingActionButton button = ((FloatingActionButton) view.findViewById(R.id.add_event_button));
+        button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_red_light));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addEventInterface.addEventFromMap();
+            }
+        });
         SupportMapFragment fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         fragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -88,8 +97,8 @@ public class MainMapFragment extends Fragment {
                 googleMap.animateCamera(zoom);
                 if (events != null) {
                     for (Event event : events) {
-                        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
-                                .getLatitude(), event.getLocation().getLongitude())));
+                        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(event
+                                .getLatitude(), event.getLongitude())));
                         eventMap.put(marker, event);
                     }
                 }
@@ -111,16 +120,17 @@ public class MainMapFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-//        mListener = (MainMapInterAction) activity;
+        addEventInterface = (MapAddEventInterface) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        addEventInterface = null;
     }
 
-    public interface MainMapInterAction {
+    public interface MapAddEventInterface {
+        public void addEventFromMap();
     }
 
     public ArrayList<Event> getEvents() {
@@ -133,8 +143,8 @@ public class MainMapFragment extends Fragment {
             map.clear();
             eventMap.clear();
             for (Event event : events) {
-                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(event.getLocation()
-                        .getLatitude(), event.getLocation().getLongitude())));
+                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(event
+                        .getLatitude(), event.getLongitude())));
                 eventMap.put(marker, event);
             }
         }
@@ -152,7 +162,9 @@ public class MainMapFragment extends Fragment {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.event_window_layout, null, false);
             Event temp = eventMap.get(marker);
             ((TextView) view.findViewById(R.id.event_title)).setText(temp.getTitle());
-            ((TextView) view.findViewById(R.id.location)).setText("950 Marietta Street, Atlanta");
+            ((TextView) view.findViewById(R.id.location)).setText(temp.getAddress());
+            ((TextView) view.findViewById(R.id.score)).setText(temp.getScore() + "");
+            ((TextView) view.findViewById(R.id.start)).setText(temp.getStartDate());
             return view;
         }
     }
