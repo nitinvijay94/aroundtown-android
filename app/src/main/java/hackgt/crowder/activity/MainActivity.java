@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements MainMapFragment.M
         } else {
             search.collapseActionView();
             search.setVisible(false);
-            menu.findItem(R.id.toggle).setIcon(android.R.drawable.ic_menu_preferences);
+            menu.findItem(R.id.toggle).setIcon(android.R.drawable.ic_menu_info_details);
         }
         return super.onPrepareOptionsMenu(menu);
     }

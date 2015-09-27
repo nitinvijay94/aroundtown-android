@@ -7,6 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:padding="20dp"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:orientation="vertical">
@@ -16,14 +17,30 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/titleEvent"
-                android:layout_width="0dp"
+            <LinearLayout
                 android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:paddingTop="10dp"
-                android:text="Title"
-                android:textSize="30sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="0dp"
+                    android:text="Title"
+                    android:textSize="30sp"/>
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="0dp"
+                    android:text="longitude, latitude"
+                    style="@style/EventInfoText" />
+
+            </LinearLayout>
 
 
             <LinearLayout
@@ -33,13 +50,15 @@
 
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:src = "@drawable/ic_play_dark"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="300" />
+                    android:text="300"
+                    style="@style/EventInfoText"/>
 
                 <Button
                     android:layout_width="match_parent"
@@ -50,20 +69,12 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="longitude, latitude"
-            android:textSize="10sp" />
-
-        <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:text="this is a description.this is a description.this is a description.this is a description.this is a description.this is a description.this is a description.this is a description.this is a description.this is a description.this is a description."
-            android:textSize="10sp" />
+            style="@style/EventInfoText" />
 
         <TextView
             android:id="@+id/price"
@@ -71,7 +82,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:text="Price: $10"
-            android:textSize="10sp" />
+            style="@style/EventInfoText" />
 
         <TextView
             android:id="@+id/Date"
@@ -79,7 +90,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:text="Date: Tomorrow"
-            android:textSize="10sp" />
+            style="@style/EventInfoText" />
 
         <TextView
             android:id="@+id/time"
@@ -87,13 +98,15 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:text="Time: 8:00PM - 2:00AM"
-            android:textSize="10sp" />
+            style="@style/EventInfoText" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/commentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></FrameLayout>
+        android:layout_weight="1">
+
+    </FrameLayout>
 
 </LinearLayout>

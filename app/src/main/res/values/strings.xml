@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">hackgt</string>
-    <string name="title_activity_maps">Crowder</string>
+    <string name="app_name">Around Town</string>
+    <string name="title_activity_maps">Events</string>
+    <string name="title_event_info">Event</string>
     <string name="search">SEARCH</string>
     <string name="toggle">TOGGLE</string>
     <string name="popularity">POPULAR</string>

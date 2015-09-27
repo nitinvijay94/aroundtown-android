@@ -9,4 +9,8 @@
         <item name="android:textColor">#fff</item>
         <item name="android:background">@drawable/event_list_button</item>
     </style>
+
+    <style name="EventInfoText">
+        <item name="android:textSize">17sp</item>
+    </style>
 </resources>
