@@ -39,7 +39,7 @@ public class EventViewerFragment extends Fragment {
     private boolean sortByPop = false;
     private Button sortPop;
     private Button sortDistance;
-
+    private Location current;
 
     public static EventViewerFragment newInstance() {
         EventViewerFragment fragment = new EventViewerFragment();
@@ -58,28 +58,34 @@ public class EventViewerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_viewer, container, false);
+
         eventList = (RecyclerView) view.findViewById(R.id.comment_list);
-        eventList.setHasFixedSize(true);
         if (events == null) {
             events = new ArrayList<>();
         }
+
         mLayoutManager = new LinearLayoutManager(getActivity());
         eventList.setLayoutManager(mLayoutManager);
+
         if (mAdapter == null) {
             mAdapter = new EventAdapter(events, getActivity());
         } else {
             mAdapter.setEvents(events);
         }
         eventList.setAdapter(mAdapter);
+
         final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         refreshLayout.setNestedScrollingEnabled(true);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 eventViewerInterface.refresh();
+                sortPop.setBackgroundColor(0xFFD76C56);
+                sortDistance.setBackgroundColor(0xFFD76C56);
                 refreshLayout.setRefreshing(false);
             }
         });
+
         FloatingActionButton button = ((FloatingActionButton) view.findViewById(R.id.add_event_button));
         button.setBackgroundTintList(ColorStateList.valueOf(0xFFD76C56));
         button.setOnClickListener(new View.OnClickListener() {
@@ -88,18 +94,21 @@ public class EventViewerFragment extends Fragment {
                 eventViewerInterface.showAddEventDialog();
             }
         });
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, true);
+        if (provider != null) {
+            current = locationManager.getLastKnownLocation(provider);
+        }
+
         sortDistance = (Button) view.findViewById(R.id.distance);
         sortDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sortByPop = false;
                 toggle();
-                LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                Criteria criteria = new Criteria();
-                String provider = locationManager.getBestProvider(criteria, true);
-                final Location current;
-                if (provider != null) {
-                    current = locationManager.getLastKnownLocation(provider);
+                if (current != null) {
 
                     Collections.sort(mAdapter.getEvents(), new Comparator<Event>() {
                         @Override

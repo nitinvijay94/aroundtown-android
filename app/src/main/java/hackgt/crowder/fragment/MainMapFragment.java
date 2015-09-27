@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import hackgt.crowder.Constants;
 import hackgt.crowder.activity.EventInfoActivity;
 import hackgt.crowder.model.Event;
 
@@ -106,6 +107,7 @@ public class MainMapFragment extends Fragment {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
                         Intent intent = new Intent(getActivity(), EventInfoActivity.class);
+                        intent.putExtra(Constants.ID, eventMap.get(marker).getId());
                         getActivity().startActivity(intent);
                     }
                 });

@@ -2,6 +2,7 @@ package hackgt.crowder.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 
 import com.example.hackgt.R;
 
+import hackgt.crowder.Constants;
 import hackgt.crowder.activity.EventInfoActivity;
 import hackgt.crowder.model.Event;
 
@@ -68,7 +70,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Event temp = events.get(position);
+        final Event temp = events.get(position);
         holder.titleView.setText(temp.getTitle());
         holder.scoreView.setText(temp.getScore() + "");
         holder.address.setText(temp.getAddress());
@@ -88,6 +90,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, EventInfoActivity.class);
+                intent.putExtra(Constants.ID, temp.getId());
                 context.startActivity(intent);
             }
         });
