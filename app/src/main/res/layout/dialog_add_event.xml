@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:editable="false"
+            android:focusableInTouchMode="false"
             android:singleLine="false"
             android:text="2015-10-01"
             android:textSize="15dp" />
@@ -79,6 +80,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:editable="false"
+            android:focusableInTouchMode="false"
             android:singleLine="false"
             android:text="00:00:00"
             android:textSize="15dp" />
@@ -96,6 +98,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:editable="false"
+            android:focusableInTouchMode="false"
             android:singleLine="false"
             android:text="2015-10-05"
             android:textSize="15dp" />
@@ -112,6 +115,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:editable="false"
+            android:focusableInTouchMode="false"
             android:singleLine="false"
             android:text="00:00:00"
             android:textSize="15dp" />
