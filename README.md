@@ -1,5 +1,5 @@
 # AroundTown
-HackGT 2015
+HackGT Fall 2015
 
 ##What is AroundTown?
 ![Screenshot](http://i.imgur.com/yDvrdFE.png)
