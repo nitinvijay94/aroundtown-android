@@ -13,3 +13,5 @@ Around Town allows users to anonymously host events, get basic information such 
 - Sang Chan Kim 
 - Nitin Vijayvargiya
 - Hedi Wang
+
+heroku url: http://crowdevent.herokuapp.com/events/
